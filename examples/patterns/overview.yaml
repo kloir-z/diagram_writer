@@ -1,0 +1,46 @@
+title: 受注システムの全体像：どこに何があり、どうつながるか
+subtitle: パターン「全体像」のテンプレート。拠点ごとに枠で囲み、注文の流れが左から右へ読めるように並べる（架空の例）
+direction: down
+grid:
+  - [office, dc,      cloud]
+  - [office, dc,      partner]
+nodes:
+  - id: office
+    label: 本社
+    kind: site
+    tone: internal
+    children:
+      - { id: staff, label: 営業担当, kind: person }
+      - { id: pc, label: 業務 PC, kind: pc, sub: ブラウザ }
+  - id: dc
+    label: データセンター
+    kind: site
+    tone: internal
+    children:
+      - { id: web, label: Web サーバ, kind: server, sub: 受注画面 }
+      - { id: ap, label: AP サーバ, kind: server, sub: 受注処理 }
+      - { id: db, label: DB サーバ, kind: server, sub: 注文・顧客 }
+  - id: cloud
+    label: クラウドのサービス
+    kind: zone
+    tone: neutral
+    children:
+      - { id: pay, label: 決済サービス, kind: cloud }
+      - { id: mail, label: メール配信, kind: cloud }
+  - id: partner
+    label: 取引先
+    kind: site
+    tone: customer
+    children:
+      - { id: edi, label: 受発注システム, kind: server }
+edges:
+  - { from: staff, to: pc, class: user, label: 入力 }
+  - { from: pc, to: web, class: user, label: 注文を登録 }
+  - { from: web, to: ap, class: flow }
+  - { from: ap, to: db, class: data, label: 注文データ }
+  - { from: ap, to: pay, class: flow, label: 決済 }
+  - { from: ap, to: mail, class: flow, label: 受注の通知 }
+  - { from: ap, to: edi, class: data, label: 発注データ（毎時） }
+notes:
+  - to: db
+    text: "毎晩バックアップ\n（7 日分を残す）"

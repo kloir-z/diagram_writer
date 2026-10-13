@@ -1,0 +1,24 @@
+devices:
+  - id: ntap01-0[1-2]
+    kind: storage
+    vendor: NetApp
+    model: AFF A400
+    role: NFS / iSCSI
+    ports:
+      - { name: "e0[a-b]", speed: 100G, role: クラスタインターコネクト }
+      - { name: "e0[c-d]", speed: 25G, role: データ }
+      - { name: e0M, kind: mgmt, speed: 1G }
+    lags:
+      - { name: a0a, members: "e0[c-d]", mode: lacp, role: データ }
+
+groups:
+  - { id: ntap01, kind: cluster, name: ntap01 クラスター, members: [ntap01-ha1] }
+  - { id: ntap01-ha1, kind: ha-pair, name: HA ペア 1, members: "ntap01-0[1-2]" }
+
+links:
+  # スイッチレスクラスター：ノード間を直結
+  - { a: "ntap01-01:e0[a-b]", b: "ntap01-02:e0[a-b]", cable: 100G DAC, role: クラスタインターコネクト }
+  # a0a（e0c/e0d）を leaf101/102 の vPC へ。e0c → leaf101、e0d → leaf102
+  - { a: "ntap01-0[1-2]:e0c", b: "leaf101:Eth1/[1-2]", cable: 25G DAC, tags: [fabric-a] }
+  - { a: "ntap01-0[1-2]:e0d", b: "leaf102:Eth1/[1-2]", cable: 25G DAC, tags: [fabric-b] }
+  - { a: "ntap01-0[1-2]:e0M", b: "mgmt-sw01:Gi1/0/[3-4]", cable: Cat6A, role: 管理 }

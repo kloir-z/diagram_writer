@@ -1,0 +1,35 @@
+{
+  "name": "diagram_writer",
+  "description": "M365 Copilot Chat に添付して、IT インフラの資料から draw.io で直せる構成図を作るキット",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "fetch-vendor": "node scripts/fetch-vendor.ts",
+    "render": "node src/render.ts",
+    "preview": "node scripts/preview.ts",
+    "validate": "node src/cli.ts validate",
+    "kit": "node scripts/build-kit.ts",
+    "test": "node --test",
+    "typecheck": "tsc",
+    "lint:ja": "node scripts/lint-ja.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "elkjs": "^0.12.0",
+    "puppeteer-core": "^25.13.0",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@textlint-ja/textlint-rule-preset-ai-writing": "^1.7.0",
+    "@types/node": "^24.19.2",
+    "esbuild": "^0.28.2",
+    "textlint": "^15.8.0",
+    "textlint-filter-rule-comments": "^1.3.0",
+    "textlint-rule-preset-ai-words-ja": "^1.2.1",
+    "typescript": "^7.0.2"
+  }
+}

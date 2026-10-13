@@ -1,0 +1,7 @@
+node_modules/
+/vendor/
+/fonts/
+/out/
+/dist/
+/work/
+__pycache__/

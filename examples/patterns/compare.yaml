@@ -1,0 +1,49 @@
+title: 移行の前と後：何がなくなり、何が残るか
+subtitle: パターン「比較」のテンプレート。変更前と変更後を同じ並びで左右に配置し、間を太い矢印で結ぶ。なくなるものは補足で示す（架空の例）
+direction: down
+grid:
+  - [before, after]
+nodes:
+  - id: before
+    label: いま（自社のサーバ室）
+    kind: site
+    tone: internal
+    grid:
+      - [users-b]
+      - [app-b]
+      - [data-b]
+    children:
+      - { id: users-b, label: 利用者, kind: person }
+      - { id: app-b, label: 業務アプリ, kind: server, sub: 自社のサーバ }
+      - id: data-b
+        label: データ
+        kind: group
+        children:
+          - { id: db-b, label: データベース, kind: server }
+          - { id: tape-b, label: テープ装置, kind: storage, sub: バックアップ }
+  - id: after
+    label: 移行後（クラウド）
+    kind: site
+    tone: customer
+    grid:
+      - [users-a]
+      - [app-a]
+      - [data-a]
+    children:
+      - { id: users-a, label: 利用者, kind: person }
+      - { id: app-a, label: 業務アプリ, kind: service, sub: クラウドの実行環境 }
+      - id: data-a
+        label: データ
+        kind: group
+        children:
+          - { id: db-a, label: データベース, kind: service, sub: 管理型サービス }
+edges:
+  - { from: users-b, to: app-b, class: user }
+  - { from: app-b, to: db-b, class: data }
+  - { from: db-b, to: tape-b, class: data, label: 毎晩 }
+  - { from: users-a, to: app-a, class: user }
+  - { from: app-a, to: db-a, class: data }
+  - { from: before, to: after, class: transition, label: 2027 年 4 月に移行, emphasis: true }
+notes:
+  - to: tape-b
+    text: "移行後はなくなる\n（バックアップはサービスの機能で取る）"

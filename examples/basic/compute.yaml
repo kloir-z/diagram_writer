@@ -1,0 +1,21 @@
+devices:
+  - id: esx[01-04]
+    kind: server
+    vendor: Dell
+    model: PowerEdge R760
+    role: ESXi ホスト
+    ports:
+      - { name: "vmnic[0-1]", speed: 25G, media: SFP28 }
+      - { name: iDRAC, kind: mgmt, speed: 1G }
+
+groups:
+  - { id: esx-cl01, kind: cluster, name: vSphere クラスター cl01, members: "esx[01-04]" }
+
+links:
+  # vmnic0 → leaf101、vmnic1 → leaf102（ホスト順に Eth1/11 から）
+  - { a: "esx[01-04]:vmnic0", b: "leaf101:Eth1/[11-14]", cable: 25G DAC, tags: [fabric-a] }
+  - { a: "esx[01-04]:vmnic1", b: "leaf102:Eth1/[11-14]", cable: 25G DAC, tags: [fabric-b] }
+  - { a: "esx[01-04]:iDRAC", b: "mgmt-sw01:Gi1/0/[11-14]", cable: Cat6A, role: 管理 }
+
+open_questions:
+  - esx03 の iDRAC の接続先が設計書の配線表（Gi1/0/13）とラック図（Gi1/0/23）で食い違う。配線表を採用した

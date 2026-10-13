@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://diagram-writer.invalid/model.schema.json",
+  "title": "構成図モデル（1 ファイル分）",
+  "description": "モデルのディレクトリ（例: model/）にある YAML ファイル 1 つの形式。複数ファイルの各リストは連結される。範囲記法 [1-48] [01-08] [a-d] [1,3,5] は id・name・members・a/b で使える。",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" }
+      }
+    },
+    "devices": { "type": "array", "items": { "$ref": "#/definitions/device" } },
+    "groups": { "type": "array", "items": { "$ref": "#/definitions/group" } },
+    "links": { "type": "array", "items": { "$ref": "#/definitions/link" } },
+    "mlags": { "type": "array", "items": { "$ref": "#/definitions/mlag" } },
+    "open_questions": {
+      "description": "元資料から確定できなかった点。推測で埋めずにここへ書く。",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "definitions": {
+    "id": {
+      "description": "英数字と . _ - 、範囲記法の [ ] , のみ。先頭は英数字か [。",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9\\[][A-Za-z0-9._,\\[\\]-]*$"
+    },
+    "speed": {
+      "description": "例: 1G, 10G, 25G, 100G, 32G（FC）, 100M",
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)?[MGT]$"
+    },
+    "names": {
+      "description": "範囲記法つきの名前 1 つ、または名前の配列",
+      "type": ["string", "array"],
+      "minLength": 1,
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["switch", "router", "firewall", "load-balancer", "storage", "server", "chassis", "appliance", "other"]
+        },
+        "vendor": { "type": "string" },
+        "model": { "type": "string" },
+        "role": { "type": "string" },
+        "rack": { "type": "string" },
+        "u": { "type": "integer", "minimum": 1 },
+        "note": { "type": "string" },
+        "ports": { "type": "array", "items": { "$ref": "#/definitions/port" } },
+        "lags": { "type": "array", "items": { "$ref": "#/definitions/lag" } }
+      }
+    },
+    "port": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["ethernet", "fc", "mgmt", "console", "other"] },
+        "speed": { "$ref": "#/definitions/speed" },
+        "media": { "type": "string" },
+        "slot": { "type": "string" },
+        "role": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "lag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "members"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "members": { "$ref": "#/definitions/names" },
+        "mode": { "enum": ["lacp", "static", "active-backup", "other"] },
+        "role": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "group": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "members"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "kind": {
+          "enum": ["site", "rack", "fabric", "cluster", "ha-pair", "vpc-domain", "stack", "chassis", "other"]
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "members": { "$ref": "#/definitions/names" },
+        "note": { "type": "string" }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["a", "b"],
+      "properties": {
+        "a": { "type": "string", "minLength": 3 },
+        "b": { "type": "string", "minLength": 3 },
+        "cable": { "type": "string" },
+        "role": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "note": { "type": "string" }
+      }
+    },
+    "mlag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "members"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "kind": { "enum": ["vpc", "mlag", "other"] },
+        "members": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 3 } },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

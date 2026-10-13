@@ -1,0 +1,71 @@
+title: 本社とデータセンターの接続：どの通信を許可するか
+subtitle: パターン「接続と境界」のテンプレート。区画を枠とアドレスで示し、外部への通信は FW を経由して描く。ポート番号は線のラベルに（架空の例、アドレスは RFC 5737）
+direction: down
+grid:
+  - [office, internet]
+  - [office, dc]
+nodes:
+  - id: office
+    label: 本社
+    kind: site
+    tone: internal
+    children:
+      - id: office-lan
+        label: 業務 LAN
+        kind: zone
+        tone: internal
+        specs: 192.0.2.0/24
+        children:
+          - { id: pc, label: 業務 PC, kind: pc, specs: 192.0.2.21-.80 }
+      - { id: fw-office, label: 本社 FW, kind: firewall, specs: 203.0.113.1 }
+  - id: internet
+    label: インターネット
+    kind: zone
+    tone: neutral
+    children:
+      - { id: pay, label: 決済サービス, kind: cloud }
+  - id: dc
+    label: データセンター
+    kind: site
+    tone: customer
+    grid:
+      - [fw-dc,  .     ]
+      - [dmz,    app   ]
+      - [.,      mgmt  ]
+    children:
+      - { id: fw-dc, label: DC FW, kind: firewall, specs: 203.0.113.10 }
+      - id: dmz
+        label: DMZ
+        kind: zone
+        tone: customer
+        specs: 198.51.100.0/26
+        children:
+          - { id: web, label: Web サーバ, kind: server, specs: 198.51.100.10 }
+      - id: app
+        label: 業務セグメント
+        kind: zone
+        tone: customer
+        specs: 198.51.100.64/26
+        children:
+          - { id: ap, label: AP サーバ, kind: server, specs: 198.51.100.70 }
+          - { id: db, label: DB サーバ, kind: server, specs: 198.51.100.71 }
+      - id: mgmt
+        label: 管理セグメント
+        kind: zone
+        tone: restricted
+        specs: 198.51.100.128/26
+        children:
+          - { id: jump, label: 踏み台, kind: jump, specs: 198.51.100.130 }
+edges:
+  - { from: pc, to: fw-office, class: user, dir: none, label: HTTPS 443 → Web }
+  - { from: fw-office, to: fw-dc, class: vpn, label: IPsec VPN, dir: both }
+  - { from: fw-dc, to: web, class: user, label: HTTPS 443 }
+  - { from: web, to: ap, class: flow, label: TCP 8080 }
+  - { from: ap, to: db, class: data, label: TCP 5432 }
+  - { from: ap, to: fw-dc, class: flow, dir: none, label: HTTPS 443 → 決済 }
+  - { from: fw-dc, to: pay, class: flow }
+  - { from: jump, to: ap, class: device, label: SSH 22（保守） }
+  - { from: db, to: fw-dc, class: blocked, label: 外へ出さない }
+notes:
+  - to: fw-dc
+    text: "許可：本社 → Web の HTTPS 443、\nAP → 決済サービスの HTTPS 443"

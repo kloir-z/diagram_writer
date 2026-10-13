@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://diagram-writer.invalid/diagram.schema.json",
+  "title": "図の記述（1 ファイル = 1 枚）",
+  "description": "座標は書かない。nodes の入れ子で包含関係、edges で関係、direction で流れの向き、grid でざっくりした配置を表す。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "nodes"],
+  "properties": {
+    "title": { "type": "string", "minLength": 1 },
+    "subtitle": { "type": "string" },
+    "direction": { "enum": ["right", "down"] },
+    "grid": { "$ref": "#/definitions/grid" },
+    "legend": { "type": "boolean" },
+    "nodes": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/node" } },
+    "edges": { "type": "array", "items": { "$ref": "#/definitions/edge" } },
+    "notes": { "type": "array", "items": { "$ref": "#/definitions/note" } }
+  },
+  "definitions": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+    "lines": {
+      "type": ["string", "array"],
+      "minLength": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "grid": {
+      "description": "ざっくりした配置。行ごとに子の id を並べる（\".\" は空き）。同じ id を隣り合うマスに書くと、その範囲にまたがる",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "type": "string", "pattern": "^(\\.|[A-Za-z0-9][A-Za-z0-9._-]*)$" }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "label": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "person", "pc", "server", "vm", "storage", "gpu", "llm", "ai-service", "tool", "service", "repo", "data",
+            "switch", "router", "firewall", "jump", "cloud", "other",
+            "site", "zone", "host", "rack", "cluster", "group"
+          ]
+        },
+        "sub": { "$ref": "#/definitions/lines" },
+        "specs": { "$ref": "#/definitions/lines" },
+        "tone": { "enum": ["internal", "customer", "restricted", "neutral"] },
+        "layer": { "type": "integer", "minimum": 0, "maximum": 50 },
+        "emphasis": { "type": "boolean" },
+        "children": { "type": "array", "items": { "$ref": "#/definitions/node" } },
+        "grid": { "$ref": "#/definitions/grid" }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "$ref": "#/definitions/id" },
+        "to": { "$ref": "#/definitions/id" },
+        "label": { "type": "string", "minLength": 1 },
+        "class": { "enum": ["user", "flow", "build", "llm", "tool", "device", "vpn", "data", "approval", "blocked", "transition", "note"] },
+        "step": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "dir": { "enum": ["forward", "both", "none"] },
+        "emphasis": { "type": "boolean" }
+      }
+    },
+    "note": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["to", "text"],
+      "properties": {
+        "to": { "$ref": "#/definitions/id" },
+        "text": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

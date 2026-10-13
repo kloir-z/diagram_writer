@@ -1,0 +1,38 @@
+system:
+  id: basic
+  name: サンプル基盤（架空）
+  note: 範囲記法・LAG・vPC・グループの書き方の見本
+
+devices:
+  - id: leaf10[1-2]
+    kind: switch
+    vendor: Cisco
+    model: Nexus 93180YC-FX
+    role: サーバー収容 Leaf
+    ports:
+      - { name: "Eth1/[1-48]", speed: 25G, media: SFP28 }
+      - { name: "Eth1/[49-54]", speed: 100G, media: QSFP28 }
+      - { name: mgmt0, kind: mgmt, speed: 1G, media: RJ45 }
+    lags:
+      - { name: po1, members: "Eth1/[53-54]", mode: lacp, role: vPC ピアリンク }
+      - { name: po11, members: Eth1/1, mode: lacp, role: ntap01-01 a0a }
+      - { name: po12, members: Eth1/2, mode: lacp, role: ntap01-02 a0a }
+
+  - id: mgmt-sw01
+    kind: switch
+    vendor: Cisco
+    model: Catalyst 9300-48T
+    role: 管理用 L2
+    ports:
+      - { name: "Gi1/0/[1-48]", speed: 1G, media: RJ45 }
+
+groups:
+  - { id: leaf-vpc1, kind: vpc-domain, name: vPC ドメイン 1, members: "leaf10[1-2]" }
+
+mlags:
+  - { id: vpc11, kind: vpc, members: [leaf101:po11, leaf102:po11] }
+  - { id: vpc12, kind: vpc, members: [leaf101:po12, leaf102:po12] }
+
+links:
+  - { a: "leaf101:Eth1/[53-54]", b: "leaf102:Eth1/[53-54]", cable: 100G DAC, role: vPC ピアリンク }
+  - { a: "leaf10[1-2]:mgmt0", b: "mgmt-sw01:Gi1/0/[1-2]", cable: Cat6A, role: 管理 }

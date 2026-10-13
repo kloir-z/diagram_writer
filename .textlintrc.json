@@ -1,0 +1,14 @@
+{
+  "filters": {
+    "comments": true
+  },
+  "rules": {
+    "preset-ai-words-ja": {
+      "no-ai-words": {
+        "dictionaryPath": "./textlint/ai-words-extra.json",
+        "allows": ["経路"]
+      }
+    },
+    "@textlint-ja/preset-ai-writing": true
+  }
+}

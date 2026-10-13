@@ -1,0 +1,64 @@
+{
+  "files": [
+    {
+      "path": "vendor/drawio/LICENSE",
+      "url": "https://raw.githubusercontent.com/jgraph/drawio/v32.4.1/LICENSE",
+      "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1"
+    },
+    {
+      "path": "vendor/drawio/js/export-init.js",
+      "url": "https://raw.githubusercontent.com/jgraph/drawio/v32.4.1/src/main/webapp/js/export-init.js",
+      "sha256": "cf9b6518b7f34c62ff0cc3f1f049fae340d2e7f8b486b3261ee5bff211a73d58"
+    },
+    {
+      "path": "vendor/drawio/js/app.min.js",
+      "url": "https://raw.githubusercontent.com/jgraph/drawio/v32.4.1/src/main/webapp/js/app.min.js",
+      "sha256": "6b459480290f96a8c345ee636523a86e6de6ef5ffb62532cfc04a5b4a896b7e0"
+    },
+    {
+      "path": "vendor/drawio/js/stencils.min.js",
+      "url": "https://raw.githubusercontent.com/jgraph/drawio/v32.4.1/src/main/webapp/js/stencils.min.js",
+      "sha256": "f6ee4f7244ed74ba74b012ee621bc8d14f8492583a976e37f2b75328145c29b6"
+    },
+    {
+      "path": "vendor/drawio/js/shapes-14-6-5.min.js",
+      "url": "https://raw.githubusercontent.com/jgraph/drawio/v32.4.1/src/main/webapp/js/shapes-14-6-5.min.js",
+      "sha256": "90aadbae203c3cb582201fcf1a8af45278b9693a29524393b5dc982138cb21fc"
+    },
+    {
+      "path": "vendor/drawio/js/export.js",
+      "url": "https://raw.githubusercontent.com/jgraph/drawio/v32.4.1/src/main/webapp/js/export.js",
+      "sha256": "bba498ed0c56f3fc8893ee79c2ca13ddc6cafd21a9107c26bc58b0c268c0a76e"
+    },
+    {
+      "path": "vendor/drawio/mxgraph/css/common.css",
+      "url": "https://raw.githubusercontent.com/jgraph/drawio/v32.4.1/src/main/webapp/mxgraph/css/common.css",
+      "sha256": "080278000f2a3bdba6d29f426f24654b5041539d3c4868a9434028e141db92a7"
+    },
+    {
+      "path": "fonts/OFL.txt",
+      "url": "https://raw.githubusercontent.com/googlefonts/morisawa-biz-ud-gothic/18934af56b9c003ca58c54bffbf226848cb11032/OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "fonts/BIZUDPGothic-Regular.ttf",
+      "url": "https://raw.githubusercontent.com/googlefonts/morisawa-biz-ud-gothic/18934af56b9c003ca58c54bffbf226848cb11032/fonts/ttf/BIZUDPGothic-Regular.ttf",
+      "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01"
+    },
+    {
+      "path": "fonts/BIZUDPGothic-Bold.ttf",
+      "url": "https://raw.githubusercontent.com/googlefonts/morisawa-biz-ud-gothic/18934af56b9c003ca58c54bffbf226848cb11032/fonts/ttf/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "fonts/BIZUDGothic-Regular.ttf",
+      "url": "https://raw.githubusercontent.com/googlefonts/morisawa-biz-ud-gothic/18934af56b9c003ca58c54bffbf226848cb11032/fonts/ttf/BIZUDGothic-Regular.ttf",
+      "sha256": "7d2b48d84ef4e65c9f85bcf65fb1fb41c92b134be641fab6a7141d597c9a92b0"
+    },
+    {
+      "path": "fonts/BIZUDGothic-Bold.ttf",
+      "url": "https://raw.githubusercontent.com/googlefonts/morisawa-biz-ud-gothic/18934af56b9c003ca58c54bffbf226848cb11032/fonts/ttf/BIZUDGothic-Bold.ttf",
+      "sha256": "c686d1b05b36d98473d98f67e74e96048a5ad6695de143111b8328b78900006e"
+    }
+  ]
+}

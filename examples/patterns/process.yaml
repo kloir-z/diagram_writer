@@ -1,0 +1,39 @@
+title: サーバの設定変更：承認されるまで本番は変更しない
+subtitle: パターン「工程」のテンプレート。段階ごとに枠で区切り、手順の番号を要素に付ける。承認と変更の線だけを太くする（架空の例）
+direction: down
+grid:
+  - [before, approval, after]
+  - [target, target,   target]
+nodes:
+  - id: before
+    label: 承認前：確認のみ
+    kind: group
+    children:
+      - { id: s1, label: ① 変更を申請する, kind: person, sub: 運用担当 }
+      - { id: s2, label: ② 手順を作成する, kind: service, sub: 運用ツール }
+      - { id: s3, label: ③ 差分を確認する, kind: tool, sub: 本番は読み取りのみ }
+  - id: approval
+    label: 人が承認する
+    kind: group
+    children:
+      - { id: s4, label: ④ 差分を提示する, kind: service, sub: 運用ツール }
+      - { id: s5, label: ⑤ 承認する, kind: person, sub: 承認者, emphasis: true }
+  - id: after
+    label: 承認後：変更する
+    kind: group
+    children:
+      - { id: s6, label: ⑥ 変更を適用する, kind: tool, sub: 自動化ツール }
+      - { id: s7, label: ⑦ 結果を記録する, kind: repo, sub: 申請・差分・承認者・結果 }
+  - { id: target, label: 本番サーバ ×10, kind: server }
+edges:
+  - { from: s1, to: s2, class: flow }
+  - { from: s2, to: s3, class: flow }
+  - { from: s3, to: s4, class: flow }
+  - { from: s4, to: s5, class: user, label: 差分 }
+  - { from: s5, to: s6, class: approval, label: 承認, emphasis: true }
+  - { from: s6, to: s7, class: flow }
+  - { from: s3, to: target, class: data, label: 設定を読み取る }
+  - { from: s6, to: target, class: device, label: 設定を変更する, emphasis: true }
+notes:
+  - to: s6
+    text: "⑤ の承認が無いと\n実行できない"
