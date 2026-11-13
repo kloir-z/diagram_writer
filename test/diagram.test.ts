@@ -458,6 +458,28 @@ describe('toDrawio', () => {
     assert.deepEqual(edgeCells.filter((e) => !e.includes('note:')).sort(), ['legend→1', 'note-1→edge-1', 'note-1→edge-1'].sort());
     assert.equal(edgeCells.filter((e) => e.startsWith('note:')).length, 2, '補足の点線が 2 本ない');
   });
+
+  test('破線は線の太さによらず px で長さが決まる（fixDash=1）。無いと draw.io は太さ倍にし、太い線ほど粗くなる', async () => {
+    const { spec } = parseDiagram({
+      file: 'v.yaml',
+      text: [
+        'title: t',
+        'nodes:',
+        '  - { id: z, kind: zone, tone: internal, label: 区画, children: [{ id: a, label: A }] }',
+        '  - { id: b, label: B }',
+        'notes:',
+        '  - { to: b, text: 補足 }',
+        'edges:',
+        '  - { from: a, to: b, class: vpn, emphasis: true }',
+        '  - { from: b, to: a, class: data }',
+      ].join('\n'),
+    });
+    assert.ok(spec);
+    const xml = toDrawio(await layoutDiagram(spec, FONTS), 'p');
+    const dashed = [...xml.matchAll(/<mxCell id="([^"]*)"[^>]*style="([^"]*dashed=1;[^"]*)"/g)];
+    assert.ok(dashed.length >= 4, `破線のセルが足りない: ${dashed.map((m) => m[1]).join(', ')}`);
+    for (const [, id, style] of dashed) assert.match(style, /(^|;)fixDash=1;/, `${id} に fixDash=1 が無い`);
+  });
 });
 
 describe('lintLayout', () => {

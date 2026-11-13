@@ -117,7 +117,7 @@ export const EDGE_THEME: Record<EdgeClass, EdgeTheme> = {
   llm: { color: '#9673a6', width: 2.5, dash: null, name: 'LLM API（推論）' },
   tool: { color: '#5a9a4a', width: 2.5, dash: null, name: 'ツール呼び出し' },
   device: { color: '#d79b00', width: 2.5, dash: null, name: '機器操作（SSH・API）' },
-  vpn: { color: '#6c8ebf', width: 4, dash: '10 5', name: 'VPN・拠点間接続' },
+  vpn: { color: '#6c8ebf', width: 3, dash: '10 5', name: 'VPN・拠点間接続' },
   data: { color: '#6c8ebf', width: 1.5, dash: '5 4', name: 'データ・ログの流れ' },
   approval: { color: '#b85450', width: 2.5, dash: null, name: '承認' },
   blocked: { color: '#b85450', width: 1.5, dash: '3 4', name: '通信させない' },

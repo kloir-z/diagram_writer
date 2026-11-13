@@ -49,7 +49,7 @@ function nodeStyle(n: LaidNode): string {
     const s = containerStyle(n.kind as ContainerKind, n.tone);
     return style({
       rounded: 1, absoluteArcSize: 1, arcSize: 14, container: 1, collapsible: 0, recursiveResize: 0, html: 1, whiteSpace: 'wrap',
-      fillColor: s.fill, strokeColor: s.stroke, strokeWidth: s.strokeWidth, dashed: s.dashed ? 1 : 0, dashPattern: s.dashed ? '8 4' : undefined,
+      fillColor: s.fill, strokeColor: s.stroke, strokeWidth: s.strokeWidth, dashed: s.dashed ? 1 : 0, dashPattern: s.dashed ? '8 4' : undefined, fixDash: s.dashed ? 1 : undefined,
       align: 'left', verticalAlign: 'top', spacingLeft: r((n.header?.box.x ?? n.box.x + HEADER_INSET_X) - n.box.x), spacingRight: HEADER_INSET_X, spacingTop: HEADER_INSET_Y,
     }) + FONT;
   }
@@ -75,7 +75,8 @@ function lineStyle(cls: LaidEdge['cls'], dir: LaidEdge['dir'], emphasis: boolean
   }
   return {
     strokeColor: t.color, strokeWidth: emphasis ? t.width + 1.5 : t.width,
-    dashed: t.dash ? 1 : 0, dashPattern: t.dash ?? undefined,
+    // fixDash：破線の長さを px で決める（無いと draw.io は線の太さ倍にし、太い線ほど粗くなる。確認用 SVG とも合わなくなる）
+    dashed: t.dash ? 1 : 0, dashPattern: t.dash ?? undefined, fixDash: t.dash ? 1 : undefined,
     endArrow: cls === 'blocked' ? 'cross' : cls === 'note' || dir === 'none' ? 'none' : head, endFill: fill, endSize: arrowSize,
     startArrow: dir === 'both' ? head : 'none', startFill: fill, startSize: arrowSize,
   };
@@ -156,7 +157,7 @@ export function toDrawio(layout: Layout, name: string): string {
       } else if (item.type === 'zone') {
         const s = containerStyle('zone', item.key as Tone);
         cells.push(
-          `<mxCell id="${id}:swatch" value="" style="${style({ rounded: 1, absoluteArcSize: 1, arcSize: 6, fillColor: s.fill, strokeColor: s.stroke, strokeWidth: s.strokeWidth, dashed: 1, dashPattern: '8 4' })}" vertex="1" parent="${LEGEND_ID}">${geometry(sample, lb)}</mxCell>`,
+          `<mxCell id="${id}:swatch" value="" style="${style({ rounded: 1, absoluteArcSize: 1, arcSize: 6, fillColor: s.fill, strokeColor: s.stroke, strokeWidth: s.strokeWidth, dashed: 1, dashPattern: '8 4', fixDash: 1 })}" vertex="1" parent="${LEGEND_ID}">${geometry(sample, lb)}</mxCell>`,
         );
       } else {
         const cls = item.key as LaidEdge['cls'];
